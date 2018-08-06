@@ -11,7 +11,7 @@ import GameplayKit
 
 let BlockSize:CGFloat = 20.0
 
-let TickLengthLevelOne = TimeInterval(600)
+let TickLengthLevelOne = TimeInterval(200)
 
 class GameScene: SKScene {
     
@@ -185,7 +185,7 @@ class GameScene: SKScene {
                 
                 let randomDuration = TimeInterval(arc4random_uniform(2)) + 0.5
 
-                var startAngle = CGFloat(M_PI)
+                var startAngle = CGFloat(Double.pi)
                 var endAngle = startAngle * 2
                 if goLeft {
                     endAngle = startAngle

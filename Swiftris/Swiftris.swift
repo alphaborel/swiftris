@@ -6,7 +6,6 @@
 //  Copyright © 2017 Bloc. All rights reserved.
 //
 
-
 let NumColumns = 10
 let NumRows = 20
 let StartingColumn = 4
@@ -14,7 +13,8 @@ let StartingRow = 0
 let PreviewColumn = 12
 let PreviewRow = 1
 let PointsPerLine = 10
-let LevelThreshold = 500
+let LevelThreshold = 50
+
 
 protocol SwiftrisDelegate {
     //Invoked when the current round of Swiftris ends
@@ -42,6 +42,7 @@ class Swiftris {
     var fallingShape:Shape?
     var delegate:SwiftrisDelegate?
     
+    var highscore = 30
     var score = 0
     var level = 1
     
@@ -113,6 +114,7 @@ class Swiftris {
     }
     
     func endGame() {
+        if(score > highscore) {highscore = score}
         score = 0
         level = 1
         delegate?.gameDidEnd(swiftris: self)

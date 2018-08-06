@@ -14,12 +14,22 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
 
     var scene: GameScene!
     var swiftris:Swiftris!
+    var userDefaults: UserDefaults!
+    var paused: Bool = false
     
     @IBOutlet weak var levelLabel: UILabel!
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet weak var highscoreLabel: UILabel!
+    
     var panPointReference:CGPoint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        userDefaults = UserDefaults.standard
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
+        tap.numberOfTapsRequired = 2
+        view.addGestureRecognizer(tap)
         
         //Configure the view.
         let skView = view as! SKView
@@ -32,6 +42,17 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         scene.tick = didTick
         
         swiftris = Swiftris()
+        let hs = userDefaults.object(forKey: "swiftris_highscore")
+        if(hs != nil) {
+            switch(hs) {
+            case let hs_int as Int:
+                swiftris.highscore = hs_int
+            default:
+                swiftris.highscore = 0
+            }
+        } else {
+            swiftris.highscore = 0
+        }
         
         swiftris.delegate = self
         
@@ -40,6 +61,16 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         //Present the scene.
         skView.presentScene(scene)
         
+    }
+    
+    @objc func doubleTapped() {
+        if(paused) {
+            scene.tick = didTick
+            paused = false
+        } else {
+            scene.tick = nil
+            paused = true
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -66,7 +97,9 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         }
     }
     @IBAction func didTap(_ sender: UITapGestureRecognizer) {
-        swiftris.rotateShape()
+        if(!paused) {
+                swiftris.rotateShape()
+        }
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -106,6 +139,8 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     func gameDidBegin(swiftris: Swiftris) {
         
         levelLabel.text = "\(swiftris.level)"
+        scoreLabel.text = "\(swiftris.score)"
+        highscoreLabel.text = "\(swiftris.highscore)"
         scene.tickLengthMillis = TickLengthLevelOne
         
         // The following is false when restarting a new game
@@ -121,6 +156,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     func gameDidEnd(swiftris: Swiftris) {
         view.isUserInteractionEnabled = false
         scene.stopTicking()
+        userDefaults.set(swiftris.highscore, forKey: "swiftris_highscore")
         
         scene.playSound(sound: "Sounds/gameover.mp3")
         scene.animateCollapsingLines(linesToRemove: swiftris.removeAllBlocks(), fallenBlocks: swiftris.removeAllBlocks()) {
@@ -153,7 +189,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
 
         let removedLines = swiftris.removeCompletedLines()
         if removedLines.linesRemoved.count > 0 {
-
+            scoreLabel.text = "\(swiftris.score)"
             scene.animateCollapsingLines(linesToRemove: removedLines.linesRemoved, fallenBlocks:removedLines.fallenBlocks) {
 
                 self.gameShapeDidLand(swiftris: swiftris)

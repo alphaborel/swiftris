@@ -565,6 +565,7 @@
 				A045D7D61F01903600C829DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A045D7D71F01903600C829DD /* Build configuration list for PBXNativeTarget "SwiftrisTests" */ = {
 			isa = XCConfigurationList;
@@ -573,6 +574,7 @@
 				A045D7D91F01903600C829DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A045D7DA1F01903600C829DD /* Build configuration list for PBXNativeTarget "SwiftrisUITests" */ = {
 			isa = XCConfigurationList;
@@ -581,6 +583,7 @@
 				A045D7DC1F01903600C829DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
